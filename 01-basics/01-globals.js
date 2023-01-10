@@ -30,3 +30,6 @@ console.log("Absolute path to directory for this file:", __dirname)
 
 // The absolute path to this file
 console.log("The absolute path to this file:", __filename)
+
+// Controlling if nodemon is working
+console.log('Nodemon updating...')
