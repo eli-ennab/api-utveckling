@@ -1,5 +1,5 @@
 /*
-* Do all things geomery-related
+* Do all things geometry-related
 */
 
 const boxArea = (w, h) => {
