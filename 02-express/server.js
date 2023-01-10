@@ -13,12 +13,26 @@ const app = express()
 
 // GET /
 app.get(('/'), (req, res) => {
-	res.send("Hello, world...")
+	// res.send("Hello, world.")
+	res.send({
+		message: "Hello, world.",
+		feeling: "Happy.",
+		express: [
+			"Yes.",
+			"Yas.",
+			"Yea."
+		]
+	})
 })
 
 // GET /coffee
 app.get(('/coffee'), (req, res) => {
-	res.send("is good for you...")
+	res.send("is good for you.")
+})
+
+// POST /
+app.post(('/'), (req, res) => {
+	res.send("I am no mailbox.")
 })
 
 // Start listening for incoming requests on port 3000
