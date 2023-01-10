@@ -1,0 +1,13 @@
+{
+  "name": "01-basics",
+  "version": "1.0.0",
+  "main": "01-globals.js",
+  "scripts": {
+    "start": "node 01-globals.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "WTFPL",
+  "keywords": [],
+  "description": ""
+}
