@@ -14,6 +14,15 @@ let joke
 fs.readFile('data/oneliners.json', (err, data) => {
   if (err) throw err;
   joke = JSON.parse(data);
+//   console.log(joke)
+
+  // Generate a random number between 0 and the last index of the array
+	const randomIndex = Math.floor(Math.random() * joke.length);
+
+	// Get the joke at the randomly generated index
+	const randomJoke = joke[randomIndex];
+
+	console.log(randomJoke);
 });
 
 // GET /
