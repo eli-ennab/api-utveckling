@@ -19,6 +19,9 @@ const app = express()
 // 	next()
 // })
 
+// Parse any incoming JSON
+app.use( express.json() )
+
 // Log information about all incoming requests using morgan
 app.use( morgan('dev') )
 // app.use( morgan('tiny') )
@@ -63,6 +66,16 @@ app.get('/joke', (req, res) => {
 app.get('/users', (req, res) => {
 	console.log("query-string:", req.query)	// { search: 'kalle' }
 	res.send(users)
+})
+
+// POST /users
+// Create a new user
+app.post('/users', (req, res) => {
+	console.log("Create user?")
+
+	console.log("Body?", req.body)
+
+	res.send({})
 })
 
 // GET /users/:userId
