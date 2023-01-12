@@ -33,11 +33,7 @@ app.get('/coffee', (req, res) => {
 // GET /joke
 app.get('/joke', (req, res) => {
 	// Get a random item from the array `oneliners`
-
-	// const i = Math.floor(Math.random() * oneliners.length)
-	const i = _.random(0, oneliners.length - 1)
-
-	const joke = oneliners[i]
+	const joke = _.sample(oneliners)
 
 	// Respond with a object containing the oneliner in the `joke` attribute
 	res.send({
