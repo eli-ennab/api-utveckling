@@ -53,6 +53,13 @@ app.post(('/'), (req, res) => {
 	res.send("I am no mailbox.")
 })
 
+// Catch requests where a route does not exist
+app.use((req, res) => {
+	res.send({
+		message: "Sorry, no such route exists",
+	})
+})
+
 // Start listening for incoming requests on port 3000
 app.listen(PORT, () => {
 	console.log(`Server started on localhost: ${PORT}`)
