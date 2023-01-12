@@ -61,6 +61,7 @@ app.get('/joke', (req, res) => {
 // GET /users
 // List all users
 app.get('/users', (req, res) => {
+	console.log("query-string:", req.query)	// { search: 'kalle' }
 	res.send(users)
 })
 
@@ -74,6 +75,12 @@ app.get('/users/:userId', (req, res) => {
 
 	// Find user in users array
 	const user = users.find(user => user.id === userId)
+
+	// if (!user) {
+	// 	res.status(404).send({
+	// 		message: ` ${req.params.userId} is not a valid user.`,
+	// 	})
+	// }
 
 	res.send(user)
 })
