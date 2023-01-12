@@ -53,8 +53,8 @@ app.get('/joke', (req, res) => {
 
 // Catch requests where a route does not exist
 app.use((req, res) => {
-	res.send({
-		message: "Sorry, no such route exists",
+	res.status(404).send({
+		message: `Sorry, no route exists for ${req.method} ${req.path}`,
 	})
 })
 
