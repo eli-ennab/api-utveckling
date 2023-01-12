@@ -2,20 +2,26 @@
 const express = require('express')
 const oneliners = require('./data/oneliners.json')
 const _ = require('lodash')
+const morgan = require('morgan')
 const PORT = 3000
 
 // Create a new Express app
 const app = express()
 
-// Log information about all incoming requests
-app.use( (req, res, next) => {
-	console.log("Someone requested something.")
-	console.log(`Method: ${req.method}`)
-	console.log(`Path: ${req.path}`)
-	const now = new Date()
-	console.log(`Time: ${now.toLocaleString()}`)
-	next()
-})
+// // Log information about all incoming requests
+// app.use( (req, res, next) => {
+// 	console.log("Someone requested something.")
+// 	console.log(`Method: ${req.method}`)
+// 	console.log(`Path: ${req.path}`)
+// 	const now = new Date()
+// 	console.log(`Time: ${now.toLocaleString()}`)
+// 	next()
+// })
+
+// Log information about all incoming requests using morgan
+app.use( morgan('dev') )
+// app.use( morgan('tiny') )
+// app.use( morgan('combined') )
 
 // GET /
 app.get('/', (req, res) => {
