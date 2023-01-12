@@ -7,6 +7,16 @@ const PORT = 3000
 // Create a new Express app
 const app = express()
 
+// Log information about all incoming requests
+app.use( (req, res, next) => {
+	console.log("Someone requested something.")
+	console.log(`Method: ${req.method}`)
+	console.log(`Path: ${req.path}`)
+	const now = new Date()
+	console.log(`Time: ${now.toLocaleString()}`)
+	next()
+})
+
 // GET /
 app.get('/', (req, res) => {
 	// res.send("Oh, hi there ☺️")
