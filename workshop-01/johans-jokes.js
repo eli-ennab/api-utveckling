@@ -1,6 +1,7 @@
 // Require Express
 const express = require('express')
 const oneliners = require('./data/oneliners.json')
+const users = require('./data/users.json')
 const _ = require('lodash')
 const morgan = require('morgan')
 const PORT = 3000
@@ -55,6 +56,26 @@ app.get('/joke', (req, res) => {
 	res.send({
 		joke,	// joke: joke
 	})
+})
+
+// GET /users
+// List all users
+app.get('/users', (req, res) => {
+	res.send(users)
+})
+
+// GET /users/:userId
+// Get the user with the id of userId
+app.get('/users/:userId', (req, res) => {
+	// Cast userId parameter into a Number
+	// console.log("Params:", req.params)
+	// const { userId } = req.params
+	const userId = Number(req.params.userId)
+
+	// Find user in users array
+	const user = users.find(user => user.id === userId)
+
+	res.send(user)
 })
 
 // Catch requests where a route does not exist
