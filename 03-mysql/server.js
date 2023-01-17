@@ -56,6 +56,7 @@ app.get('/movies/:movieId', async (req, res) => {
 	const db = await connection
 	const [rows] = await db.query(`SELECT * FROM movies WHERE id="${movieId}"`)
 
+	// Guard clause
 	if (!rows.length) {
 		res.status(404).send({ message: 'No such record exists.' })
 		return
