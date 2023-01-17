@@ -10,7 +10,7 @@ const morgan = require('morgan')
 const PORT = 3000
 
 // Get the client
-const mysql = require('mysql2')
+const mysql = require('mysql2/promise')		// importing a version that handles promises
 
 // console.log(process.env.DATABASE_HOST)
 
@@ -37,6 +37,14 @@ app.get('/', (req, res) => {
 	res.send({
 		message: "Oh, hi there ☺️",
 	})
+})
+
+// GET /movies
+app.get('/movies', async (req, res) => {
+	const db = await connection
+	const [rows] = await db.query('SELECT * FROM movies')
+	res.send(rows)
+	// res.send(rows[0])
 })
 
 // Catch requests where a route does not exist
