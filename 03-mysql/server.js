@@ -58,6 +58,7 @@ app.get('/movies/:movieId', async (req, res) => {
 
 	if (!rows.length) {
 		res.status(404).send({ message: 'No such record exists.' })
+		return
 	}
 
 	res.send(rows[0])
