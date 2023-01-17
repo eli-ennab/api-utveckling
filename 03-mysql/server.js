@@ -44,7 +44,18 @@ app.get('/movies', async (req, res) => {
 	const db = await connection
 	const [rows] = await db.query('SELECT * FROM movies')
 	res.send(rows)
-	// res.send(rows[0])
+})
+
+/*
+* 1. Add route and logic for retrieveing just one movie (ex: /movies/2)
+* 2. Handle if no movie with the requested id exists
+*/
+
+app.get('/movies/:movieId', async (req, res) => {
+	const { movieId } = req.params // same as const movieId = req.params.movieId
+	const db = await connection
+	const [rows] = await db.query(`SELECT * FROM movies WHERE id="${movieId}"`)
+	res.send(rows[0])
 })
 
 // Catch requests where a route does not exist
