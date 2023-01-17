@@ -12,7 +12,7 @@
 * Dokumentdatabaser 
 * WebSockets (realtidskommunikation mellan klient och server)
 
-#### Ny mapp:
+#### npm install:
 
 ```zsh
 npm init -y
@@ -20,4 +20,6 @@ npm install nodemon --save-dev
 npm install express
 npm i lodash
 npm i morgan
+npm i mysql2
+npm i dotenv
 ```
