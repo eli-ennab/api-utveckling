@@ -105,15 +105,28 @@ app.get('/movies/:movieId', async (req, res) => {
 app.post('/movies', async (req, res) => {
 	console.log("Incoming!", req.body)
 
-	const db = await connection
-	const result = db.query('INSERT INTO movies SET title = ?, genre = ?, runtime = ?, release_date = ?', [
-		req.body.title,
-		req.body.genre,
-		req.body.runtime,
-		req.body.release_date,
-	])
+	// STEP 1: Check that all required data is present, otherwise fail with HTTP 400
+	if (!req.body.genre || !req.body.title) {
+		console.log(`Required data is missing. Try again.`)
+		res.status(404).send(`Required data is missing. Try again.`)
+		return
+	}
 
-	res.status(201).send(result)
+	// STEP 2: Check that the incoming data is of the correct data type
+
+	const db = await connection
+	const [result] = await db.query('INSERT INTO movies SET ?', {
+		title: req.body.title,
+		genre: req.body.genre,
+		runtime: req.body.runtime,
+		release_date: req.body.release_date,
+	})
+
+	// Send back the received data and append the id of the newly created record
+	res.status(201).send({
+		...req.body,
+		id: result.insertId,
+	})
 })
 
 // Catch requests where a route does not exist
