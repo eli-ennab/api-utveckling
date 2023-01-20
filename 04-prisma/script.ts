@@ -5,6 +5,7 @@ const main = async () => {
     // Write Prisma Client queries here
     console.log("It works?")
 
+    /*
 	// Get all phones and console.log them
 	const phones = await prisma.phones.findMany({   // SELECT * FROM phones
         // select: {                                   // SELECT manufacturer, model FROM phones
@@ -16,11 +17,31 @@ const main = async () => {
             manufacturer: "Apple",
         }
     })
-	console.log(phones)
+	console.log("Phones:", phones)
 
 	// Get all users and console.log them
 	const users = await prisma.users.findMany()
-	console.log(users)
+	console.log("User:", users)
+    */
+
+    /*
+    // Get the first user that matches our query
+	const user = await prisma.users.findFirst({
+        where: {
+            // id: 2,
+            name: "Korben Dallas"
+        }
+    })
+	console.log("User:", user)
+    */
+
+    // Get a specific user
+     const user = await prisma.users.findUnique({
+        where: {
+            id: 2
+        }
+     })
+     console.log("Unique user:", user)
 }
 
 main()
