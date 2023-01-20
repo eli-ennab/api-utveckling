@@ -83,13 +83,23 @@ const main = async () => {
      console.log(user)
      */
 
+     /*
     // Get all the users and their phones
     const users = await prisma.users.findMany({
         include: {
             phones: true
         }
     })
-    console.dir(users, { depth: null})
+    console.dir(users, { depth: null })
+    */
+
+    // Get all the phones with their user
+    const phones = await prisma.phones.findMany({
+        include: {
+            users: true
+        }
+    })
+    console.dir(phones, { depth: null })
 }
 
 main()
