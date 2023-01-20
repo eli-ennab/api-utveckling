@@ -6,7 +6,16 @@ const main = async () => {
     console.log("It works?")
 
 	// Get all phones and console.log them
-	const phones = await prisma.phones.findMany()
+	const phones = await prisma.phones.findMany({   // SELECT * FROM phones
+        // select: {                                   // SELECT manufacturer, model FROM phones
+        //     manufacturer: true,
+        //     model: true,
+        //     // imei: true                              // SELECT imei FROM phones
+        // },
+        where: {
+            manufacturer: "Apple",
+        }
+    })
 	console.log(phones)
 
 	// Get all users and console.log them
