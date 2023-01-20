@@ -35,6 +35,7 @@ const main = async () => {
 	console.log("User:", user)
     */
 
+    /*
     // Get all users who's name starts with "Th" and console.log them
     // SELECT * FROM users WHERE name LIKE "Th%" eller "%an%"
     const users = await prisma.users.findMany({
@@ -57,6 +58,7 @@ const main = async () => {
         skip: 1,
      })
      console.log("Users:", users)
+    */
 
     /*
     // Get a specific user
@@ -67,6 +69,17 @@ const main = async () => {
      })
      console.log("Unique user:", user)
      */
+
+     // Get a specific user and their phone(s)
+     const user = await prisma.users.findUnique({
+        where: {
+            id: 4,
+        },
+        include: {
+            phones: true
+        }
+     })
+     console.log(user)
 }
 
 main()
