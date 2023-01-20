@@ -1,0 +1,46 @@
+{
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "liveSassCompile.settings.formats": [
+
+      {
+          "format": "compressed",
+          "extensionName": ".min.css",
+          "savePath": "/css",
+          "savePathReplacementPairs": null
+      }
+  ],
+  "liveSassCompile.settings.includeItems": [
+
+
+  
+  
+  ],
+  "liveSassCompile.settings.autoprefix": [
+
+  ],
+  "liveSassCompile.settings.generateMap": false,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "Nord Wave",
+  "editor.minimap.enabled": false,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "terminal.integrated.shellIntegration.enabled": false,
+  "githubPullRequests.createOnPublishBranch": "never",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "terminal.integrated.inheritEnv": false,
+  "terminal.external.windowsExec": "C:\\Git\\usr\\bin\\bash.exe",
+  "terminal.integrated.shell.windows": "C:\\Git\\bin\\bash.exe",
+  "terminal.integrated.profiles.windows": {
+      "PowerShell": {
+          "source": "PowerShell",
+          "icon": "terminal-powershell"
+      },
+      "Command Prompt": {
+          "path": [
+              "${env:windir}\\Sysnative\\cmd.exe",
+              "${env:windir}\\System32\\cmd.exe"
+          ],
+          "args": [],
+          "icon": "terminal-cmd"
+      }
+  }
+}
