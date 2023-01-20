@@ -70,6 +70,7 @@ const main = async () => {
      console.log("Unique user:", user)
      */
 
+     /*
      // Get a specific user and their phone(s)
      const user = await prisma.users.findUnique({
         where: {
@@ -80,6 +81,15 @@ const main = async () => {
         }
      })
      console.log(user)
+     */
+
+    // Get all the users and their phones
+    const users = await prisma.users.findMany({
+        include: {
+            phones: true
+        }
+    })
+    console.dir(users, { depth: null})
 }
 
 main()
