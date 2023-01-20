@@ -1,13 +1,19 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
+
 const main = async () => {
     // Write Prisma Client queries here
     console.log("It works?")
 
-	// Get all users and console.log themnod
+	// Get all phones and console.log them
+	const phones = await prisma.phones.findMany()
+	console.log(phones)
+
+	// Get all users and console.log them
 	const users = await prisma.users.findMany()
 	console.log(users)
 }
+
 main()
     .then(async () => {
         await prisma.$disconnect()
