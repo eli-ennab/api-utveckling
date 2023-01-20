@@ -53,6 +53,8 @@ const main = async () => {
                 id: 'desc',
             },
         ],
+        take: 2,
+        skip: 1,
      })
      console.log("Users:", users)
 
