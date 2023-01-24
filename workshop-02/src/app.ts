@@ -26,6 +26,8 @@ app.get('/phones', async (req, res) => {
 	}
 })
 
+// GET one phone
+
 // GET /users, all users
 app.get('/users', async (req, res) => {
 	try {
@@ -37,16 +39,25 @@ app.get('/users', async (req, res) => {
 	}
 })
 
-// // GET one user
-// app.get('/users/:id', async (req, res) => {
-// 	const users = await prisma.users.findMany()
-// 	res.send(users)
-// })
+// GET one user
+app.get('/users/:userId', async (req, res) => {
+	const userId = Number(req.params.userId)
 
-// // GET one phone
-// app.get('/phones/:id', async (req, res) => {
-// 	const phones = await prisma.phones.findMany()
-// 	res.send(phones)
-// })
+	try {
+		const user = await prisma.users.findUniqueOrThrow({
+			where: {
+				id: userId,
+			}
+		})
+
+		res.send(user)
+
+	} catch (err){
+		console.error(err)
+		res.status(404).send ({
+			message: "Not found.",
+		})
+	}
+})
 
 export default app
