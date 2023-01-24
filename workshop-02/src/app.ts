@@ -9,10 +9,15 @@ app.use(morgan('dev'))
 /**
  * GET /
  */
-app.get('/', (req, res) => {
-	res.send({
-		message: "I AM API, BEEP BOOP",
-	})
+// app.get('/', (req, res) => {
+// 	res.send({
+// 		message: "I AM API, BEEP BOOP",
+// 	})
+// })
+
+app.get('/users', async (req, res) => {
+	const users = await prisma.users.findMany()
+	res.send(users)
 })
 
 export default app
