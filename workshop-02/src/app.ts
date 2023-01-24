@@ -52,6 +52,23 @@ app.get('/phones/:phoneId', async (req, res) => {
 	}
 })
 
+// POST to /phones, create a new phone
+app.post('/phones', async (req, res) => {
+	try {
+		const phone = await prisma.phones.create({
+			data: req.body,
+		})
+
+		res.status(201).send(phone)
+
+	} catch (err){
+		console.error(err)
+		res.status(500).send ({
+			message: "Something went wrong creating the record in the database.",
+		})
+	}
+})
+
 // GET /users, all users
 app.get('/users', async (req, res) => {
 	try {
@@ -84,6 +101,29 @@ app.get('/users/:userId', async (req, res) => {
 		console.error(err)
 		res.status(404).send ({
 			message: "Not found.",
+		})
+	}
+})
+
+// // A test to see if it works to POST to /users, create a new user
+// app.post('/users', async (req, res) => {
+// 	console.log(req.body)
+// 	res.send()
+// })
+
+// POST to /users, create a new user
+app.post('/users', async (req, res) => {
+	try {
+		const user = await prisma.users.create({
+			data: req.body,
+		})
+
+		res.status(201).send(user)
+
+	} catch (err){
+		console.error(err)
+		res.status(500).send ({
+			message: "Something went wrong creating the record in the database.",
 		})
 	}
 })
