@@ -27,18 +27,21 @@ app.get('/phones', async (req, res) => {
 	}
 })
 
-// GET /phones/:phoneId, one phone
+// GET /phones/:phoneId, one phone and the user of that specific phone
 app.get('/phones/:phoneId', async (req, res) => {
 	const phoneId = Number(req.params.phoneId)
 
 	try {
-		const user = await prisma.phones.findUniqueOrThrow({
+		const phone = await prisma.phones.findUniqueOrThrow({
 			where: {
 				id: phoneId,
+			},
+			include: {
+				user: true,
 			}
 		})
 
-		res.send(user)
+		res.send(phone)
 
 	} catch (err){
 		console.error(err)
