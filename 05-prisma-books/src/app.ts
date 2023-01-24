@@ -47,4 +47,19 @@ app.get('/books', async (req, res) => {
 	}
 })
 
+// POST /books
+app.post('/books', async (req, res) => {
+	try {
+		const book = await prisma.book.create({
+			data: {
+				title: req.body.title,
+				pages: req.body.pages,
+			}
+		})
+		res.send(book)
+	} catch (err) {
+		res.status(500).send({ message: "Something went wrong." })
+	}
+})
+
 export default app
