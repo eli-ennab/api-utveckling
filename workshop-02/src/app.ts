@@ -62,7 +62,7 @@ app.get('/users', async (req, res) => {
 	}
 })
 
-// GET /users/:userId, one user
+// GET /users/:userId, one user and that specific persons phone(s)
 app.get('/users/:userId', async (req, res) => {
 	const userId = Number(req.params.userId)
 
@@ -70,6 +70,9 @@ app.get('/users/:userId', async (req, res) => {
 		const user = await prisma.users.findUniqueOrThrow({
 			where: {
 				id: userId,
+			},
+			include: {
+				phones: true,
 			}
 		})
 
