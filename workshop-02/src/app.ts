@@ -27,6 +27,25 @@ app.get('/phones', async (req, res) => {
 })
 
 // GET one phone
+app.get('/phones/:phoneId', async (req, res) => {
+	const phoneId = Number(req.params.phoneId)
+
+	try {
+		const user = await prisma.phones.findUniqueOrThrow({
+			where: {
+				id: phoneId,
+			}
+		})
+
+		res.send(user)
+
+	} catch (err){
+		console.error(err)
+		res.status(404).send ({
+			message: "Not found.",
+		})
+	}
+})
 
 // GET /users, all users
 app.get('/users', async (req, res) => {
