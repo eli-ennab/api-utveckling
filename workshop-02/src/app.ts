@@ -9,6 +9,7 @@ app.use(morgan('dev'))
 /**
  * GET /
  */
+
 // app.get('/', (req, res) => {
 // 	res.send({
 // 		message: "I AM API, BEEP BOOP",
@@ -26,7 +27,7 @@ app.get('/phones', async (req, res) => {
 	}
 })
 
-// GET one phone
+// GET /phones/:phoneId, one phone
 app.get('/phones/:phoneId', async (req, res) => {
 	const phoneId = Number(req.params.phoneId)
 
@@ -58,7 +59,7 @@ app.get('/users', async (req, res) => {
 	}
 })
 
-// GET one user
+// GET /users/:userId, one user
 app.get('/users/:userId', async (req, res) => {
 	const userId = Number(req.params.userId)
 
