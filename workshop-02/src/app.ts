@@ -28,6 +28,7 @@ app.get('/phones', async (req, res) => {
 })
 
 // GET /phones/:phoneId, one phone and the user of that specific phone
+// n:1
 app.get('/phones/:phoneId', async (req, res) => {
 	const phoneId = Number(req.params.phoneId)
 
@@ -62,7 +63,8 @@ app.get('/users', async (req, res) => {
 	}
 })
 
-// GET /users/:userId, one user and that specific persons phone(s)
+// GET /users/:userId, one user and that specific person's phone(s)
+// 1:n
 app.get('/users/:userId', async (req, res) => {
 	const userId = Number(req.params.userId)
 
