@@ -6,9 +6,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('dev'))
 
-/**
- * GET /
- */
+// GET /
 app.get('/', (req, res) => {
 	res.send({
 		message: "I AM API, BEEP BOOP",
@@ -21,6 +19,20 @@ app.get('/authors', async (req, res) => {
 		const authors = await prisma.author.findMany()
 		res.send(authors)
 	} catch {
+		res.status(500).send({ message: "Something went wrong." })
+	}
+})
+
+// POST /authors
+app.post('/authors', async (req, res) => {
+	try {
+		const author = await prisma.author.create({
+			data: {
+				name: req.body.name,
+			}
+		})
+		res.send(author)
+	} catch (err) {
 		res.status(500).send({ message: "Something went wrong." })
 	}
 })
