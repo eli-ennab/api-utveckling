@@ -41,27 +41,6 @@ app.post('/authors', async (req, res) => {
 	}
 })
 
-// POST /authors/:authorId/books
-// app.post('/authors/:authorId/books', async (req, res) => {
-// 	try {
-// 		const result = await prisma.author.update({
-// 			where: {
-// 				id: Number(req.params.authorId)
-// 			},
-// 			data: {
-// 				books: {
-// 					connect: {
-// 						id: req.body.bookId,
-// 					}
-// 				}
-// 			}
-// 		})
-// 		res.send(result)
-// 	} catch (err) {
-// 		res.status(500).send({ message: "Something went wrong." })
-// 	}
-// })
-
 app.post('/authors/:authorId/books', async (req, res) => {
 	try {
 		const result = await prisma.author.update({
