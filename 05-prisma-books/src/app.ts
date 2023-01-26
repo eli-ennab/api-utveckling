@@ -10,4 +10,4 @@ app.use(morgan('dev'))			// middleware
 // Use routes
 app.use(routes)
 
-export default app
+export default app				// used in server.ts
