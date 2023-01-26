@@ -42,11 +42,12 @@ app.post('/authors', async (req, res) => {
 	}
 })
 
+// POST /authors/:authorId/books
 app.post('/authors/:authorId/books', async (req, res) => {
 	try {
 		const result = await prisma.author.update({
 			where: {
-				id: Number(req.params.authorId)
+				id: Number(req.params.authorId),
 			},
 			data: {
 				books: {
@@ -54,11 +55,14 @@ app.post('/authors/:authorId/books', async (req, res) => {
 						id: req.body.bookId,
 					}
 				}
+			},
+			include: {
+				books: true,
 			}
 		})
-		res.send(result)
+		res.status(201).send(result)
 	} catch (err) {
-		res.status(500).send({ message: "Something went wrong." })
+		res.status(500).send({ message: "Something went wrong" })
 	}
 })
 
@@ -89,9 +93,7 @@ app.post('/books', async (req, res) => {
 	}
 })
 
-/**
- * GET /publishers
- */
+// GET /publishers
 app.get('/publishers', async (req, res) => {
 	try {
 		const publishers = await prisma.publisher.findMany()
@@ -101,9 +103,8 @@ app.get('/publishers', async (req, res) => {
 	}
 })
 
-/**
- * GET /publishers/:publisherId
- */
+
+// GET /publishers/:publisherId
 app.get('/publishers/:publisherId', async (req, res) => {
 	const publisherId = Number(req.params.publisherId)
 
@@ -122,9 +123,8 @@ app.get('/publishers/:publisherId', async (req, res) => {
 	}
 })
 
-/**
- * POST /publishers
- */
+
+// POST /publishers
 app.post('/publishers', async (req, res) => {
 	try {
 		const publisher = await prisma.publisher.create({
