@@ -1,6 +1,7 @@
 // Author Template
 import Debug from 'debug'
 import { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
 import prisma from '../prisma'
 
 // Create a new debug instance
@@ -26,13 +27,19 @@ export const show = async (req: Request, res: Response) => {
 
 // Create a author
 export const store = async (req: Request, res: Response) => {
-	const birthdate = (new Date(req.body.birthdate)).toISOString()
+	// Check for any validation errors
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
 
 	try {
 		const author = await prisma.author.create({
 			data: {
 				name: req.body.name,
-				birthdate: birthdate,
 			}
 		})
 		res.send(author)
