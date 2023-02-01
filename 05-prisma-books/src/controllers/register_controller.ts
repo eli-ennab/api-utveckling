@@ -1,12 +1,10 @@
 // Register Controller
-
 import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import prisma from '../prisma'
 
 // Register a new user
-
 export const register = async (req: Request, res: Response) => {
 	// Check for any validation errors
 	const validationErrors = validationResult(req)

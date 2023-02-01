@@ -1,9 +1,11 @@
 import express from 'express'
-import { body } from 'express-validator'
 import authors from './authors'
 import books from './books'
 import publishers from './publishers'
 import { register } from '../controllers/register_controller'
+import { createUserRules } from '../validations/user_rules'
+
+// Instatiate a new router
 const router = express.Router()
 
 // GET /
@@ -23,17 +25,6 @@ router.use('/books', books)
 router.use('/publishers', publishers)
 
 // Register
-router.post('/register', [
-	// validator rules:
-
-	// name required + at least 3 chars
-	body('name').isString().bail().isLength({min: 3}),
-
-	// email required + valid email
-	body('email').isEmail(),
-
-	// password required + at least 6 chars
-	body('password').isString().bail().isLength({min: 6}),
-], register)
+router.post('/register', createUserRules, register)
 
 export default router
