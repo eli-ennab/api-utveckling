@@ -33,3 +33,10 @@ model Publisher {
 	books 			Book[]
 }
 
+model User {
+	id				Int			@id @default(autoincrement()) @db.UnsignedInt
+	name			String
+	email			String		@unique
+	password		String
+}
+
