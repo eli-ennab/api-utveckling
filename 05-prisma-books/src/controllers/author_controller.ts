@@ -10,11 +10,7 @@ const debug = Debug('prisma-books:author_controller')
 // Get all authors
 export const index = async (req: Request, res: Response) => {
 	try {
-		const authors = await prisma.author.findMany({
-			include: {
-				books: true,
-			}
-		})
+		const authors = await prisma.author.findMany()
 		res.send(authors)
 	} catch (err) {
 		res.status(500).send({ message: "Something went wrong" })
@@ -23,6 +19,27 @@ export const index = async (req: Request, res: Response) => {
 
 // Get a single author
 export const show = async (req: Request, res: Response) => {
+	const authorId = Number(req.params.authorId)
+
+	try {
+		const author = await prisma.author.findUniqueOrThrow({
+			where: {
+				id: authorId,
+			},
+			include: {
+				books: true,
+			}
+		})
+
+		res.send({
+			status: "success",
+			data: author,
+		})
+
+	} catch (err) {
+		debug("Error thrown when finding book with id %o: %o", req.params.authorId, err)
+		return res.status(404).send({ status: "error", message: "Not found" })
+	}
 }
 
 // Create a author
