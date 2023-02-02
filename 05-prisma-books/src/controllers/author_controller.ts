@@ -12,7 +12,10 @@ const debug = Debug('prisma-books:author_controller')
 export const index = async (req: Request, res: Response) => {
 	try {
 		const authors = await getAuthors()
-		res.send(authors)
+		res.send({
+			status: "success",
+			data: authors,
+		})
 	} catch (err) {
 		res.status(500).send({ message: "Something went wrong" })
 	}
@@ -50,7 +53,10 @@ export const store = async (req: Request, res: Response) => {
 		const author = await createAuthor( {
 			name: req.body.name,
 		})
-		res.send(author)
+		res.send({
+			status: "success",
+			data: author,
+		})
 	} catch (err) {
 		res.status(500).send({ message: "Something went wrong" })
 	}
