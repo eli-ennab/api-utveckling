@@ -33,5 +33,9 @@ export const getAuthor = async (authorId: number) => {
  * @param data Author Details
  */
 export const createAuthor = async (data: CreateAuthorData) => {
-	return
+	return await prisma.author.create({
+		data: {
+			name: data.name,
+		}
+	})
 }

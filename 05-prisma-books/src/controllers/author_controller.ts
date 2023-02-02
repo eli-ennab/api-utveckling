@@ -47,10 +47,8 @@ export const store = async (req: Request, res: Response) => {
 	}
 
 	try {
-		const author = await prisma.author.create({
-			data: {
-				name: req.body.name,
-			}
+		const author = await createAuthor( {
+			name: req.body.name,
 		})
 		res.send(author)
 	} catch (err) {
