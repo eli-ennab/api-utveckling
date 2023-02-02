@@ -1,6 +1,6 @@
 // Validation rules for User resource
 import { body } from 'express-validator'
-import prisma from '../prisma'
+import { getUserByEmail } from '../services/user_service'
 
 // 	// validator rules:alidator rules:
 export const createUserRules = [
@@ -9,11 +9,7 @@ export const createUserRules = [
 	// email required + valid email
 	body('email').isEmail().custom(async value => {
 		// check if a User with that email already exists
-		const user = await prisma.user.findUnique({
-			where: {
-				email: value,
-			}
-		})
+		const user = await getUserByEmail(value)
 
 		if (user) {
 			// User already exists, throw a hissy-fit
