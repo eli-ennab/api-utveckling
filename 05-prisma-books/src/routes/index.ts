@@ -1,6 +1,7 @@
 import express from 'express'
 import authors from './authors'
 import books from './books'
+import profile from './profile'
 import publishers from './publishers'
 import { register } from '../controllers/register_controller'
 import { createUserRules } from '../validations/user_rules'
@@ -20,6 +21,9 @@ router.use('/authors', authors)
 
 // /books
 router.use('/books', books)
+
+// /profile
+router.use('/profile', profile)
 
 // /publishers
 router.use('/publishers', publishers)
