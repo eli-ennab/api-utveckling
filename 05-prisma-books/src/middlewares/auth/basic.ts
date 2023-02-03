@@ -72,7 +72,9 @@ export const basic = async (req: Request, res: Response, next: NextFunction) => 
 		})
 	}
 	debug("Password for user %s was correct", email)
-	// Attach User to Request
+
+	// Attach User to Request with definition merging
+	req.user = user
 
 	// All is ok, nothing to see here, move along... index.ts will send you to profile.ts
 	next()
