@@ -6,6 +6,7 @@ import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import { createUser, getUserByEmail } from '../services/user_service'
+import { JwtPayload } from '../types'
 
 /**
  * Login a user
@@ -33,7 +34,7 @@ export const login = async (req: Request, res: Response) => {
 	}
 
 	// construct jwt-payload
-	const payload = {
+	const payload: JwtPayload = {
 		sub: user.id,		// subject the token is issued for
 		name: user.name,
 	}

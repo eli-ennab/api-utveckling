@@ -5,7 +5,7 @@ import profile from './profile'
 import publishers from './publishers'
 import { login, register } from '../controllers/user_controller'
 import { createUserRules } from '../validations/user_rules'
-import { basic } from '../middlewares/auth/basic'
+import { validateToken } from '../middlewares/auth/jwt'
 
 // Instatiate a new router
 const router = express.Router()
@@ -24,7 +24,7 @@ router.use('/authors', authors)
 router.use('/books', books)
 
 // /profile
-router.use('/profile', basic, profile)
+router.use('/profile', validateToken, profile)
 
 // /publishers
 router.use('/publishers', publishers)
