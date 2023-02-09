@@ -1,12 +1,16 @@
 /**
  * User controller
  */
+import { Payload } from '@prisma/client/runtime'
 import bcrypt from 'bcrypt'
+import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import { createUser, getUserByEmail } from '../services/user_service'
 import { JwtPayload } from '../types'
+
+const debug = Debug('prisma-books:user_controller')
 
 /**
  * Login a user
@@ -122,20 +126,59 @@ export const register = async (req: Request, res: Response) => {
 
 export const refresh = (req: Request, res: Response) => {
 	// Make sure authorizaion header exists
+	if (!req.headers.authorization) {
+		debug("Authorization header missing")
+		return res.status(401).send({
+			status: "fail",
+			message: "Authorization required"
+		})
+	}
 
 	// Split authorization header on ' '
+	const [authSchema, token] = req.headers.authorization.split(" ")
 
 	// Make sure authorization schema is "Bearer"
+	if(authSchema.toLowerCase() !== "bearer") {
+		debug("Authorization schema is not Bearer")
+		return res.status(401).send({
+			status: "fail",
+			message: "Authorization required"
+		})
+	}
 
 	// Verify refresh token and get payload
+	try {
+		const payload = (jwt.verify(token, process.env.REFRESH_TOKEN_SECRET || "") as unknown) as JwtPayload
+		debug("Yay, got package: %o", payload)
 
-	// Construct access-token payload
+		// Attach payload to Request
+		req.token = payload
 
-	// Issue a new access token
+	} catch (err) {
+		debug("Token failed verification", err)
+		return res.status(401).send({
+			status: "fail",
+			message: "Authorization required"
+		})
+	}
 
-	// Respond with new access token
-	res.send({
-		status: "success",
-		data: {},
-	})
+	// // Construct access-token payload
+	// const payload: JwtPayload = {
+	// 	sub: payload.sub,		// subject the token is issued for
+	// 	name: payload.name,
+	// 	email: payload.email,
+	// }
+
+	// // Issue a new access token
+	// const refresh_token = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+	// 	expiresIn: process.env.REFRESH_TOKEN_LIFETIME || '1d',
+	// })
+
+	// // Respond with new access token
+	// res.send({
+	// 	status: "success",
+	// 	data: {
+	// 		refresh_token
+	// 	},
+	// })
 }
