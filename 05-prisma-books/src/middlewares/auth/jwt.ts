@@ -46,7 +46,7 @@ export const validateToken = (req: Request, res: Response, next: NextFunction) =
 		debug("Yay, got package: %o", payload)
 
 		// Attach payload to Request
-		req.user = payload
+		req.token = payload
 
 	} catch (err) {
 		debug("Token failed verification", err)
