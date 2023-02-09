@@ -123,7 +123,6 @@ export const register = async (req: Request, res: Response) => {
  *
  * Authorization: Bearer <refresh-token>
  */
-
 export const refresh = (req: Request, res: Response) => {
 	// Make sure authorizaion header exists
 	if (!req.headers.authorization) {
@@ -146,39 +145,40 @@ export const refresh = (req: Request, res: Response) => {
 		})
 	}
 
-	// Verify refresh token and get payload
+	// Verify refresh-token and get refresh-token payload
 	try {
+		// Verify refresh-token using refresh-token secret
 		const payload = (jwt.verify(token, process.env.REFRESH_TOKEN_SECRET || "") as unknown) as JwtPayload
-		debug("Yay, got package: %o", payload)
 
-		// Attach payload to Request
-		req.token = payload
+		// remove `iat` and `exp` from payload
+		delete payload.iat
+		delete payload.exp
+
+		// Issue a new access token
+		if (!process.env.ACCESS_TOKEN_SECRET) {
+			return res.status(500).send({
+				status: "error",
+				message: "No access token secret defined",
+			})
+		}
+		const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+			expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '4h',
+		})
+
+		// Respond with new access token
+		res.send({
+			status: "success",
+			data: {
+				access_token,
+			},
+		})
 
 	} catch (err) {
 		debug("Token failed verification", err)
+
 		return res.status(401).send({
 			status: "fail",
-			message: "Authorization required"
+			data: "Authorization required",
 		})
 	}
-
-	// // Construct access-token payload
-	// const payload: JwtPayload = {
-	// 	sub: payload.sub,		// subject the token is issued for
-	// 	name: payload.name,
-	// 	email: payload.email,
-	// }
-
-	// // Issue a new access token
-	// const refresh_token = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-	// 	expiresIn: process.env.REFRESH_TOKEN_LIFETIME || '1d',
-	// })
-
-	// // Respond with new access token
-	// res.send({
-	// 	status: "success",
-	// 	data: {
-	// 		refresh_token
-	// 	},
-	// })
 }
