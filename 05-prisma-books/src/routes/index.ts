@@ -1,38 +1,57 @@
-import express from 'express'
+import express from "express"
 import authors from './authors'
 import books from './books'
 import profile from './profile'
 import publishers from './publishers'
-import { login, register } from '../controllers/user_controller'
-import { createUserRules } from '../validations/user_rules'
+import { login, register, refresh } from '../controllers/user_controller'
 import { validateToken } from '../middlewares/auth/jwt'
+import { createUserRules } from '../validations/user_rules'
 
-// Instatiate a new router
+// instantiate a new router
 const router = express.Router()
 
-// GET /
+/**
+ * GET /
+ */
 router.get('/', (req, res) => {
 	res.send({
 		message: "I AM API, BEEP BOOP",
 	})
 })
 
-// /authors
+/**
+ * /authors
+ */
 router.use('/authors', authors)
 
-// /books
+/**
+ * /books
+ */
 router.use('/books', books)
 
-// /profile
+/**
+ * /profile
+ */
 router.use('/profile', validateToken, profile)
 
-// /publishers
+/**
+ * /publishers
+ */
 router.use('/publishers', publishers)
 
-// POST /login
+/**
+ * POST /login
+ */
 router.post('/login', login)
 
-// POST /register
+/**
+ * POST /refresh
+ */
+router.post('/refresh', refresh)
+
+/**
+ * POST /register
+ */
 router.post('/register', createUserRules, register)
 
 export default router
