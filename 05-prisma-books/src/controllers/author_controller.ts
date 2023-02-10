@@ -1,4 +1,6 @@
-// Author Template
+/**
+ * Author template
+ */
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
@@ -8,7 +10,9 @@ import prisma from '../prisma'
 // Create a new debug instance
 const debug = Debug('prisma-books:author_controller')
 
-// Get all authors
+/**
+ * Get all authors
+ */
 export const index = async (req: Request, res: Response) => {
 	try {
 		const authors = await getAuthors()
@@ -21,7 +25,9 @@ export const index = async (req: Request, res: Response) => {
 	}
 }
 
-// Get a single author
+/**
+ * Get a single author
+ */
 export const show = async (req: Request, res: Response) => {
 	const authorId = Number(req.params.authorId)
 
@@ -38,7 +44,9 @@ export const show = async (req: Request, res: Response) => {
 	}
 }
 
-// Create a author
+/**
+ * Create an author
+ */
 export const store = async (req: Request, res: Response) => {
 	// Check for any validation errors
 	const validationErrors = validationResult(req)
@@ -62,16 +70,30 @@ export const store = async (req: Request, res: Response) => {
 	}
 }
 
-// Update a author
+/**
+ * Update an author
+ */
 export const update = async (req: Request, res: Response) => {
 }
 
-// Delete a author
+/**
+ * Delete an author
+ */
 export const destroy = async (req: Request, res: Response) => {
 }
 
-// Link a book to a author
+/**
+ * Link a book to an author
+*/
 export const addBook = async (req: Request, res: Response) => {
+
+	const bookIds = req.body.bookIds.map ( (bookId: number) => {
+		return {
+			id: bookId,
+		}
+	})
+	console.log("Books after map:", bookIds)
+
 	try {
 		const result = await prisma.author.update({
 			where: {
@@ -79,9 +101,7 @@ export const addBook = async (req: Request, res: Response) => {
 			},
 			data: {
 				books: {
-					connect: {
-						id: req.body.bookId,
-					}
+					connect: bookIds,
 				}
 			},
 			include: {
@@ -90,7 +110,30 @@ export const addBook = async (req: Request, res: Response) => {
 		})
 		res.status(201).send(result)
 	} catch (err) {
-		debug("Error thrown when adding book %o to a author %o: %o", req.body.bookId, req.params.authorId, err)
+		debug("Error thrown when adding book %o to an author %o: %o", bookIds, req.params.authorId, err)
+		res.status(500).send({ message: "Something went wrong" })
+	}
+}
+
+/**
+ * Remove book from author
+ */
+export const removeBook = async (req: Request, res: Response) => {
+	try {
+		await prisma.author.update({
+			where: {
+				id: Number(req.params.authorId),
+			},
+			data: {
+				books: {
+					disconnect: {
+						id: Number(req.params.authorId),
+					}
+				}
+			}
+		})
+	} catch (err) {
+		debug("Error thrown when removing book %o from author %o: %o", req.body.bookId, req.params.authorId, err)
 		res.status(500).send({ message: "Something went wrong" })
 	}
 }
