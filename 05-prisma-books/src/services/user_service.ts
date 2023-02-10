@@ -2,7 +2,7 @@
  * User Service
  */
 import prisma from '../prisma'
-import { CreateUserData } from '../types'
+import { CreateUserData, UpdateUserData } from '../types'
 
 /**
  * Get a user by email
@@ -16,6 +16,7 @@ export const getUserByEmail = async (email: string) => {
 		}
 	})
 }
+
 /**
  * Create a user
  *
@@ -23,10 +24,21 @@ export const getUserByEmail = async (email: string) => {
  */
 export const createUser = async (data: CreateUserData) => {
 	return await prisma.user.create({
-		data: {
-			name: data.name,
-			email: data.email,
-			password: data.password,
+		data: data,
+	})
+}
+
+/**
+ * Update a user
+ *
+ * @param userId
+ * @param userData
+ */
+export const updateUser = async (userId: number, userData: UpdateUserData) => {
+	return await prisma.user.update({
+		where: {
+			id: userId,
 		},
+		data: userData,
 	})
 }
