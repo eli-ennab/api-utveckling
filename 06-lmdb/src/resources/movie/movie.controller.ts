@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import Debug from 'debug'
 import { Movie } from './movie.model'
+import { validationResult } from 'express-validator'
 
 const debug = Debug('lmdb:movie.controller')
 
@@ -55,3 +56,39 @@ export const show = async (req: Request, res: Response) => {
 /**
  * Create a movie
  */
+export const store = async (req: Request, res: Response) => {
+	// check for any validation errors
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
+
+	try {
+		// Find a single movie
+		const newMovie = new Movie({
+			title: req.body.title,
+			runtime: req.body.runtime,
+			releaseYear: req.body.releaseYear,
+		})
+
+		await newMovie.save()
+
+		// If no movie was found, report 404
+		if (!newMovie) {
+			return res.sendStatus(404)
+		}
+
+		// Respond with movie
+		res.send({
+			status: "success",
+			data: newMovie,
+		})
+
+	} catch (err) {
+		debug("Error thrown when creating movie", err)
+		res.status(500).send({ status: "error", message: "Error thrown when creating movie" })
+	}
+}

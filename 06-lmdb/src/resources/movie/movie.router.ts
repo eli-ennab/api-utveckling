@@ -1,6 +1,8 @@
 import express from 'express'
+import { movieRules } from '../../validation/movie.validator'
 const router = express.Router()
-import { index, show } from './movie.controller'
+import { index, show, store } from './movie.controller'
+
 /**
  * GET /movies
  */
@@ -14,6 +16,6 @@ router.get('/:movieId', show)
 /**
  * POST /movies
  */
-router.post('/', async (req, res) => {})
+router.post('/', movieRules, store)
 
 export default router
