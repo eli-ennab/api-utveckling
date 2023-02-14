@@ -67,22 +67,11 @@ export const store = async (req: Request, res: Response) => {
 	}
 
 	try {
-		// Find a single movie
-		const newMovie = new Movie({
-			title: req.body.title,
-			runtime: req.body.runtime,
-			releaseYear: req.body.releaseYear,
-		})
-
-		await newMovie.save()
-
-		// If no movie was found, report 404
-		if (!newMovie) {
-			return res.sendStatus(404)
-		}
+		// create and save a new movie
+		const newMovie = await new Movie(req.body).save()
 
 		// Respond with movie
-		res.send({
+		res.status(201).send({
 			status: "success",
 			data: newMovie,
 		})
