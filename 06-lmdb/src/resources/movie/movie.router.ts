@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { index } from './movie.controller'
+import { index, show } from './movie.controller'
 /**
  * GET /movies
  */
@@ -9,7 +9,7 @@ router.get('/', index)
 /**
  * GET /movies/:movieId
  */
-router.get('/:movieId', async (req, res) => {})
+router.get('/:movieId', show)
 
 /**
  * POST /movies
