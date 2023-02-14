@@ -32,11 +32,17 @@ export const show = async (req: Request, res: Response) => {
 	const movieId = req.params.movieId
 
 	try {
-		// find a single movie
+		// Find a single movie
 		const movie = await Movie.findById(movieId)
 
+		// If no movie was found, report 404
+		if (!movie) {
+			return res.sendStatus(404)
+		}
+
+		// Respond with movie
 		res.send({
-			status:"success",
+			status: "success",
 			data: movie,
 		})
 
