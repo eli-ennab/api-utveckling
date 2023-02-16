@@ -12,6 +12,10 @@ export const index = async (req: Request, res: Response) => {
 	try {
 		// find all movies
 		const movies = await Movie.find()
+			// .sort({ title: 1, releaseYear: 1 })
+			// .sort('title')
+			.sort({ title: 1 }) 	// (A-Z)
+			.sort({ title: -1 })	// (Z-A)
 
 		res.send({
 			status:"success",
