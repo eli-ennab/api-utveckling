@@ -2,7 +2,7 @@ import { model, Schema, Document } from "mongoose"
 
 export interface IMovie extends Document {
 	title: string,
-	runtime?: number,
+	runtime: number | null,
 	releaseYear?: number,
 	genre?: string,
 	watched?: Date,
@@ -18,8 +18,13 @@ const MovieSchema: Schema = new Schema<IMovie>({
 	},
 	runtime: {
 		type: Number,
-		min: 1,
 		default: null,
+		// min: 1,
+		validate(value: number) {
+			if (value < 1 && value !== null) {
+				throw new Error("Movie can not have a negative runtime")
+			}
+		}
 	},
 	releaseYear: {
 		type: Number,
@@ -33,8 +38,9 @@ const MovieSchema: Schema = new Schema<IMovie>({
 	},
 	watched: {
 		type: Date,
-		default: Date.now(),
-		max: Date.now(),
+		default() {
+			return Date.now()
+		},
 	}
 })
 
