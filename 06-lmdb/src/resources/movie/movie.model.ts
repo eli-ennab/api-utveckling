@@ -50,9 +50,12 @@ const MovieSchema: Schema = new Schema<IMovie>({
 		type: Schema.Types.ObjectId,
 		ref: 'Person',
 	},
-	actors: {
-		type: [{ type: Schema.Types.ObjectId, ref: 'Person' }],
-	}
+	actors: [
+		{
+		type: Schema.Types.ObjectId,
+		ref: 'Person',
+		}
+	],
 })
 
 export const Movie = model<IMovie>('Movie', MovieSchema)
