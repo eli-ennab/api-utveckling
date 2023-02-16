@@ -1,8 +1,8 @@
 import express from "express"
 import movieRouter from './resources/movie/movie.router'
-import directorRouter from './resources/director/director.router'
+import personRouter from './resources/person/person.router'
 import { Movie } from './resources/movie/movie.model'
-import { Director } from './resources/director/director.model'
+import { Person } from './resources/person/person.model'
 
 // instantiate a new router
 const router = express.Router()
@@ -22,8 +22,8 @@ router.get('/', async (req, res) => {
 router.use('/movies', movieRouter)
 
 /**
- * /directors
+ * POST /people
  */
-router.use('/director', directorRouter)
+router.use('/people', personRouter)
 
 export default router
