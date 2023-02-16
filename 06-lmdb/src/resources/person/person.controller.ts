@@ -76,8 +76,6 @@ export const store = async (req: Request, res: Response) => {
 			data: person,
 		})
 
-		const err = new Error()
-
 	} catch (err) {
 		debug("Error thrown when creating person", err)
 

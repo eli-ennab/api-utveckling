@@ -34,7 +34,7 @@ export const show = async (req: Request, res: Response) => {
 
 	try {
 		// Find a single movie
-		const movie = await Movie.findById(movieId).populate('director', 'name')
+		const movie = await Movie.findById(movieId).populate('director', 'name').populate('actors', 'name')
 
 		// If no movie was found, report 404
 		if (!movie) {
@@ -67,8 +67,6 @@ export const store = async (req: Request, res: Response) => {
 			data: movie,
 		})
 
-		const err = new Error()
-
 	} catch (err) {
 		debug("Error thrown when creating movie", err)
 
@@ -77,5 +75,36 @@ export const store = async (req: Request, res: Response) => {
 		}
 
 		res.status(500).send({ status: "error", message: "Error thrown when creating a new movie" })
+	}
+}
+
+/**
+ * Update a movie
+ */
+export const update = async (req: Request, res: Response) => {
+	const movieId = req.params.movieId
+
+	try {
+		// Update Movie
+		const movie = await Movie.findByIdAndUpdate(movieId, req.body)
+
+		if (!movie) {
+			return res.sendStatus(404)
+		}
+
+		// Respond with the updated Movie
+		res.status(200).send({
+			status: "success",
+			data: null,
+		})
+
+	} catch (err) {
+		debug("Error thrown when creating movie", err)
+
+		if (err instanceof mongoose.Error.ValidationError) {
+			return res.status(400).send({ status: "error", message: err.message })
+		}
+
+		res.status(500).send({ status: "error", message: "Error thrown when updating a movie" })
 	}
 }
