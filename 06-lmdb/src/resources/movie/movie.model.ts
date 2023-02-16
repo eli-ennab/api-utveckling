@@ -4,7 +4,7 @@ export interface IMovie extends Document {
 	title: string,
 	runtime: number | null,
 	releaseYear?: number,
-	genre?: string,
+	genres: string[],
 	watched?: Date,
 }
 
@@ -31,10 +31,11 @@ const MovieSchema: Schema = new Schema<IMovie>({
 		min: 1888,
 		max: new Date().getFullYear(),
 	},
-	genre: {
-		type: String,
+	genres: {
+		type: [String],
 		lowercase: true,
-		enum: ["action", "sci-fi", "bromance", "realism"],
+		default: [],
+		// enum: ["action", "sci-fi", "bromance", "realism"],
 	},
 	watched: {
 		type: Date,
