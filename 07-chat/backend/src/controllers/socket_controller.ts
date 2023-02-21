@@ -20,6 +20,12 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	debug('Welcome to the chat')
 	socket.emit('hello')
 
+	// Listen for incoming chat messages
+	socket.on('sendChatMessage', (message) => {
+		debug('New chat message:', socket.id, message)
+		socket.broadcast.emit('chatMessage', message)
+	})
+
 	// Handle user disconnecting
 	socket.on('disconnect', () => {
 		debug('User disconnected with ID:', socket.id)
