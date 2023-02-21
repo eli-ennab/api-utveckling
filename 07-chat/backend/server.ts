@@ -1,6 +1,7 @@
 import app from './src/app'
 import http from 'http'
 import * as dotenv from 'dotenv'
+import { Server } from 'socket.io'
 
 // Initialize dotenv so it reads our `.env`-file
 dotenv.config()
@@ -9,9 +10,23 @@ dotenv.config()
 const PORT = process.env.PORT || 3000
 
 /**
- * Create HTTP server.
+ * Create HTTP server and Socket.IO server.
  */
 const server = http.createServer(app)
+const io = new Server(server, {
+	cors: {
+		origin: '*',
+		credentials: true,
+	}
+})
+
+/**
+ * Handle incoming Socket.IO connection.
+ */
+io.on('connection', (socket) => {
+	// Someone connected to Socket.IO
+	console.log("Connected with ID:", socket.id)
+})
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -28,11 +43,11 @@ server.on('error', (err: NodeJS.ErrnoException) => {
 
 	switch (err.code) {
 		case 'EACCES':
-			console.error(`🦸🏻 Port ${PORT} requires elevated privileges`)
+			console.error(`Port ${PORT} requires elevated privileges`)
 			process.exit(1)
 			break
 		case 'EADDRINUSE':
-			console.error(`🛑 Port ${PORT} is already in use`)
+			console.error(`Port ${PORT} is already in use`)
 			process.exit(1)
 			break
 		default:
@@ -44,5 +59,5 @@ server.on('error', (err: NodeJS.ErrnoException) => {
  * Event listener for HTTP server "listening" event.
  */
 server.on('listening', () => {
-	console.log(`🧑🏻‍🍳 Yay, server started on http://localhost:${PORT}`)
+	console.log(`Server started on http://localhost:${PORT}`)
 })
