@@ -60,6 +60,30 @@ const addMessageToChat = (message: ChatMessageData, ownMessage = false) => {
 	messageEl.scrollIntoView({ behavior: 'smooth' })
 }
 
+// Add a notice to the chat
+const addNoticeToChat = (content: string, timestamp: number) => {
+	// Create a new LI-element
+	const noticeEl = document.createElement('li')
+
+	// Add `notice`-class
+	noticeEl.classList.add('notice')
+
+	// Get human readable time
+	const time = new Date(timestamp).toLocaleTimeString()
+
+	// Set the content of the notice
+	noticeEl.innerHTML = `
+		<span class="content">${content}</span>
+		<span class="time">${time}</span>
+	`
+
+	// Append the LI element to the messages element
+	messagesEl.appendChild(noticeEl)
+
+	// Scroll to the bottom of the messages list
+	noticeEl.scrollIntoView({ behavior: 'smooth' })
+}
+
 // Show chat view
 const showChatView = () => {
 	startEl.classList.add('hide')
@@ -95,6 +119,13 @@ socket.on('chatMessage', (message) => {
 	// `message` as a parameter and creates a new LI-element, sets
 	// the content + styling and appends it to `messagesEl`
 	addMessageToChat(message)
+})
+
+// Listen for when a user joins the chat
+socket.on('userJoined', (notice) => {
+	console.log('A new user joined the chat', notice)
+
+	addNoticeToChat(`${notice.username} has joined the chat`, notice.timestamp)
 })
 
 // Send a message to the server when form is submitted

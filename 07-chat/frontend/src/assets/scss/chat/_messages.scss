@@ -23,11 +23,6 @@
 			align-self: flex-end;
 		}
 
-		.time {
-			font-size: 60%;
-			margin-left: 0.25rem;
-		}
-
 		.user {
 			display: block;
 			font-weight: 700;
@@ -38,4 +33,12 @@
 		color: $notice-color;
 		font-style: italic;
 	}
+
+	.message,
+	.notice {
+		.time {
+			font-size: 60%;
+		}
+	}
 }
+

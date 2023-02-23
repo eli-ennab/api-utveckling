@@ -5,6 +5,7 @@ import Debug from 'debug'
 import { Socket } from 'socket.io'
 import {
 	ClientToServerEvents,
+	NoticeData,
 	ServerToClientEvents
 } from '../types/shared/SocketTypes'
 
@@ -26,11 +27,19 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		socket.broadcast.emit('chatMessage', message)
 	})
 
-	// Listen for a user join request (the `userJoin`-event)
+	// Listen for a user join request
 	socket.on('userJoin', (username, callback) => {
-		debug("User '%s' wants to join the chat:", username)
+		debug('👶🏽 User %s wants to join the chat', username)
 
-		// Let user know they are welcome
+		const notice: NoticeData = {
+			timestamp: Date.now(),
+			username,
+		}
+
+		// Let everyone know a new user has joined
+		socket.broadcast.emit('userJoined', notice)
+
+		// Let user know they're welcome
 		callback(true)
 	})
 
