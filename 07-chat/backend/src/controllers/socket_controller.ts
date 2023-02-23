@@ -3,33 +3,28 @@
  */
 import Debug from 'debug'
 import { Socket } from 'socket.io'
-import {
-	ClientToServerEvents,
-	NoticeData,
-	ServerToClientEvents
-} from '../types/shared/SocketTypes'
+import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types/shared/SocketTypes'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
 
-// Handle the user connecting and disconnecting
+// Handle the user connecting
 export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToClientEvents>) => {
-	// Handle user connecting
-	debug('User connected with ID:', socket.id)
+	debug('A user connected', socket.id)
 
-	// Welcome the user
-	debug('Welcome to the chat')
+	// Say hello to the user
+	debug('Said hello to the user')
 	socket.emit('hello')
 
 	// Listen for incoming chat messages
 	socket.on('sendChatMessage', (message) => {
-		debug('New chat message:', socket.id, message)
+		debug('New chat message', socket.id, message)
 		socket.broadcast.emit('chatMessage', message)
 	})
 
 	// Listen for a user join request
 	socket.on('userJoin', (username, callback) => {
-		debug('👶🏽 User %s wants to join the chat', username)
+		debug('User %s wants to join the chat', username)
 
 		const notice: NoticeData = {
 			timestamp: Date.now(),
@@ -45,6 +40,6 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
 	// Handle user disconnecting
 	socket.on('disconnect', () => {
-		debug('User disconnected with ID:', socket.id)
+		debug('A user disconnected', socket.id)
 	})
 }

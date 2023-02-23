@@ -17,8 +17,8 @@ const usernameFormEl = document.querySelector('#username-form') as HTMLFormEleme
 const messagesEl = document.querySelector('#messages') as HTMLUListElement
 
 // Views
-const startEl = document.querySelector('#start') as HTMLDivElement
 const chatWrapperEl = document.querySelector('#chat-wrapper') as HTMLDivElement
+const startEl = document.querySelector('#start') as HTMLDivElement
 
 // User Details
 let username: string | null = null
@@ -40,13 +40,13 @@ const addMessageToChat = (message: ChatMessageData, ownMessage = false) => {
 	}
 
 	// Get human readable time
-	const time = new Date(message.timestamp).toLocaleTimeString()
+	const time = new Date(message.timestamp).toLocaleTimeString()  // "13:37:00"
 
 	// Set the text content of the LI element to the message
 	messageEl.innerHTML = ownMessage
 		? `
-		<span class="content">${message.content}</span>
-		<span class="time">${time}</span>
+			<span class="content">${message.content}</span>
+			<span class="time">${time}</span>
 		` : `
 			<span class="user">${message.username}</span>
 			<span class="content">${message.content}</span>
@@ -69,7 +69,7 @@ const addNoticeToChat = (content: string, timestamp: number) => {
 	noticeEl.classList.add('notice')
 
 	// Get human readable time
-	const time = new Date(timestamp).toLocaleTimeString()
+	const time = new Date(timestamp).toLocaleTimeString()  // "13:37:00"
 
 	// Set the content of the notice
 	noticeEl.innerHTML = `
@@ -106,9 +106,20 @@ socket.on('disconnect', () => {
 	console.log('Disconnected from the server')
 })
 
+// Listen for when we're reconnected
+socket.io.on('reconnect', () => {
+	console.log('Reconnected to the server')
+	// Broadcast userJoin event, but only if we were in the chat previously
+	if (username) {
+		socket.emit('userJoin', username, (success) => {
+			addNoticeToChat('You reconnected', Date.now())
+		})
+	}
+})
+
 // Listen for when the server says hello
 socket.on('hello', () => {
-	console.log('Server said Hello')
+	console.log('The nice server said Hello')
 })
 
 // Listen for new chat messages
@@ -140,7 +151,7 @@ messageFormEl.addEventListener('submit', e => {
 	const message: ChatMessageData = {
 		content: messageEl.value,
 		timestamp: Date.now(),
-		username,
+		username,  // username: username
 	}
 
 	// Send (emit) the message to the server
@@ -170,16 +181,17 @@ usernameFormEl.addEventListener('submit', e => {
 		return
 	}
 
-	// Emit `userJoin`-event to the server, and wait for acknowledgement before showing the chat view
+	// Emit `userJoin`-event to the server and wait for acknowledgement
+	// before showing the chat view
 	socket.emit('userJoin', username, (success) => {
-		console.log('Join was success?', success)
+		console.log("Join was success?", success)
 
 		if (!success) {
-			alert('No access for you')
+			alert("NO ACCESS 4 US")
 			return
 		}
 
-		// User allowed to join
+		// Yay we're allowed to join
 		console.log("Showing chat view")
 		showChatView()
 	})
