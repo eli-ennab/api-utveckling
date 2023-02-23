@@ -26,6 +26,14 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		socket.broadcast.emit('chatMessage', message)
 	})
 
+	// Listen for a user join request (the `userJoin`-event)
+	socket.on('userJoin', (username, callback) => {
+		debug("User '%s' wants to join the chat:", username)
+
+		// Let user know they are welcome
+		callback(true)
+	})
+
 	// Handle user disconnecting
 	socket.on('disconnect', () => {
 		debug('User disconnected with ID:', socket.id)
