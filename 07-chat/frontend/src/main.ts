@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client'
 import {
 	ChatMessageData,
 	ClientToServerEvents,
-	ServerToClientEvents
+	ServerToClientEvents,
 } from '@backend/types/shared/SocketTypes'
 
 const SOCKET_HOST = import.meta.env.VITE_APP_SOCKET_HOST
@@ -15,32 +15,15 @@ const messagesEl = document.querySelector('#messages') as HTMLUListElement
 // Connect to Socket.IO server
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST)
 
-// Listen for when connection is established
-socket.on('connect', () => {
-	console.log('Connected to the server with ID:', socket.id)
-})
-
-// Listen for when the server disconnected
-socket.on('disconnect', () => {
-	console.log('Disconnected from the server')
-})
-
-// Listen for when server says hello
-socket.on('hello', () => {
-	console.log('The server says hello')
-})
-
-// Add new chat messages to the chat
+// Add a message to the chat
 const addMessageToChat = (message: ChatMessageData, ownMessage = false) => {
-	// messagesEl.innerHTML += `<li class="message ${author?"own-message":""}">${message.content}</li>`
-
 	// Create a new LI element
 	const messageEl = document.createElement('li')
 
 	// Set class of LI to 'message'
 	messageEl.classList.add('message')
 
-	// If the message is from the user, add the class own-message
+	// If the message is from the user, add the class 'own-message'
 	if (ownMessage) {
 		messageEl.classList.add('own-message')
 	}
@@ -55,9 +38,28 @@ const addMessageToChat = (message: ChatMessageData, ownMessage = false) => {
 	messageEl.scrollIntoView({ behavior: 'smooth' })
 }
 
+// Listen for when connection is established
+socket.on('connect', () => {
+	console.log('Connected to the server', socket.id)
+})
+
+// Listen for when the server got tired of us
+socket.on('disconnect', () => {
+	console.log('Disconnected from the server')
+})
+
+// Listen for when the server says hello
+socket.on('hello', () => {
+	console.log('Server said Hello')
+})
+
 // Listen for new chat messages
 socket.on('chatMessage', (message) => {
-	console.log('New chat message:', message)
+	console.log('Someone wrote something', message)
+
+	// Create a function called `addMessageToChat` that takes the
+	// `message` as a parameter and creates a new LI-element, sets
+	// the content + styling and appends it to `messagesEl`
 	addMessageToChat(message)
 })
 
@@ -77,6 +79,9 @@ messageFormEl.addEventListener('submit', e => {
 	// Send (emit) the message to the server
 	socket.emit('sendChatMessage', message)
 
+	// Extend the `addMessageToChat` function to know if the message
+	// was sent by us, and then add `.own-message` class to the
+	// LI-element before appending it to `messagesEl`
 	addMessageToChat(message, true)
 
 	console.log("Emitted 'sendChatMessage' event to server", message)
