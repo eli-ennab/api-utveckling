@@ -22,6 +22,7 @@ const startEl = document.querySelector('#start') as HTMLDivElement
 
 // User Details
 let username: string | null = null
+let roomId: string | null = null
 
 // Connect to Socket.IO server
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST)
@@ -141,8 +142,8 @@ socket.on('disconnect', () => {
 socket.io.on('reconnect', () => {
 	console.log('Reconnected to the server')
 	// Broadcast userJoin event, but only if we were in the chat previously
-	if (username) {
-		socket.emit('userJoin', username, (success) => {
+	if (username && roomId) {
+		socket.emit('userJoin', username, roomId, (success) => {
 			addNoticeToChat('You reconnected', Date.now())
 		})
 	}
@@ -205,16 +206,17 @@ usernameFormEl.addEventListener('submit', e => {
 	e.preventDefault()
 
 	// Get username
+	roomId = (usernameFormEl.querySelector('#room') as HTMLSelectElement).value
 	username = (usernameFormEl.querySelector('#username') as HTMLInputElement).value.trim()
 
 	// If no username, NO CHAT FOR YOU
-	if (!username) {
+	if (!username || !roomId) {
 		return
 	}
 
 	// Emit `userJoin`-event to the server and wait for acknowledgement
 	// before showing the chat view
-	socket.emit('userJoin', username, (success) => {
+	socket.emit('userJoin', username, roomId, (success) => {
 		console.log("Join was success?", success)
 
 		if (!success) {
