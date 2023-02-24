@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client'
 import {
 	ChatMessageData,
 	ClientToServerEvents,
+	RoomInfoData,
 	ServerToClientEvents,
 } from '@backend/types/shared/SocketTypes'
 
@@ -175,13 +176,14 @@ socket.on('userJoined', (notice) => {
 messageFormEl.addEventListener('submit', e => {
 	e.preventDefault()
 
-	if (!messageEl.value.trim() || !username) {
+	if (!messageEl.value.trim() || !username || !roomId) {
 		return
 	}
 
 	// Construct message payload
 	const message: ChatMessageData = {
 		content: messageEl.value,
+		roomId,
 		timestamp: Date.now(),
 		username,  // username: username
 	}
@@ -216,15 +218,21 @@ usernameFormEl.addEventListener('submit', e => {
 
 	// Emit `userJoin`-event to the server and wait for acknowledgement
 	// before showing the chat view
-	socket.emit('userJoin', username, roomId, (success) => {
-		console.log("Join was success?", success)
+	socket.emit('userJoin', username, roomId, (result) => {
+		console.log("Join was success?", result)
 
-		if (!success) {
-			alert("NO ACCESS 4 US")
+		if (!result.success || !result.data) {
+			alert("No access for us")
 			return
 		}
 
-		// Yay we're allowed to join
+		const roomInfo = result.data
+
+		// Update chat view title with room name
+		const chatTitleEl = document.querySelector('#chat-title') as HTMLHeadingElement
+		chatTitleEl.innerText = roomInfo.name
+
+		// We are allowed to join
 		console.log("Showing chat view")
 		showChatView()
 	})
