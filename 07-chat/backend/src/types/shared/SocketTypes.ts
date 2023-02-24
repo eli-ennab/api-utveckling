@@ -1,4 +1,5 @@
 export {}
+import { Room } from '@prisma/client'
 
 // Events emitted by the server to the client
 export interface ServerToClientEvents {
@@ -9,6 +10,7 @@ export interface ServerToClientEvents {
 
 // Events emitted by the client to the server
 export interface ClientToServerEvents {
+	getRoomList: (callback: (rooms: Room[]) => void) => void
 	sendChatMessage: (message: ChatMessageData) => void
 	userJoin: (username: string, callback: (success: boolean) => void) => void
 }
