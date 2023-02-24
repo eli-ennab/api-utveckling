@@ -92,12 +92,27 @@ const showChatView = () => {
 
 // Show welcome view
 const showWelcomeView = () => {
+	const connectBtnEl = document.querySelector('#connectBtn') as HTMLButtonElement
+	const roomEl = document.querySelector('#room') as HTMLSelectElement
+
+	// Clear room list and disable connect-button
+	connectBtnEl.disabled = true
+	roomEl.innerHTML = `<option selected>Loading rooms...</option>`
+
 	// Request a list of rooms from the server
 	console.log("Requesting rooms...")
 
 	socket.emit('getRoomList', (rooms) => {
 		// We got lots of rooms
-		console.log("Rooms!", rooms)
+		console.log("Rooms:", rooms)
+
+		// Update #room with options for each room
+		roomEl.innerHTML = rooms
+			.map(room => `<option value="${room.id}">${room.name}</option>`)
+			.join('')
+
+		// Enable connect-button once we have a room list
+		connectBtnEl.disabled = false
 	})
 
 	// Enable "Connect"-button once we have a room list
