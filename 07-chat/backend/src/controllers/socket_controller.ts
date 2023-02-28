@@ -60,6 +60,24 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		// Add user to room `roomId`
 		socket.join(roomId)
 
+		// Create a User in the database and set roomId
+		const user = await prisma.user.create({
+			data: {
+				id: socket.id,
+				name: username,
+			  	roomId
+			}
+		})
+
+		// Retrieve a list of Users for the room
+		const usersInRoom = await prisma.user.findMany({
+			where: {
+				roomId
+			}
+		})
+
+		debug("List of users in room %s: %O", roomId, usersInRoom)
+
 		// Let everyone know a new user has joined
 		socket.broadcast.to(roomId).emit('userJoined', notice)
 
@@ -69,13 +87,36 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 			data: {
 				id: room.id,
 				name: room.name,
-				users: [],
+				users: usersInRoom,	// Send the user the list of users in the room
 			}
 		})
 	})
 
 	// Handle user disconnecting
-	socket.on('disconnect', () => {
+	socket.on('disconnect', async () => {
 		debug('A user disconnected', socket.id)
+
+		// Find room user was in (if any)
+		const user = await prisma.user.findUnique({
+			where: {
+				id: socket.id,
+			}
+		})
+
+		// If user was not in a room, just do nothing
+		if (!user) {
+			return
+		}
+
+		// Remove user from any room when they disconnect
+		await prisma.user.delete({
+			where: {
+				id: socket.id,
+			}
+		})
+
+		// Broadcast a new list
+
+
 	})
 }

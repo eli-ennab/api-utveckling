@@ -3,7 +3,6 @@ import { io, Socket } from 'socket.io-client'
 import {
 	ChatMessageData,
 	ClientToServerEvents,
-	RoomInfoData,
 	ServerToClientEvents,
 } from '@backend/types/shared/SocketTypes'
 
@@ -231,6 +230,12 @@ usernameFormEl.addEventListener('submit', e => {
 		// Update chat view title with room name
 		const chatTitleEl = document.querySelector('#chat-title') as HTMLHeadingElement
 		chatTitleEl.innerText = roomInfo.name
+
+		// Update userlist with users in the room
+		const onlineUsersEl = document.querySelector('#online-users') as HTMLUListElement
+		onlineUsersEl.innerHTML = roomInfo.users
+			.map(user => `<li>${user.name}</li>`)
+			.join('')
 
 		// We are allowed to join
 		console.log("Showing chat view")
