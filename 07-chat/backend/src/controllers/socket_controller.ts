@@ -5,6 +5,7 @@ import Debug from 'debug'
 import prisma from '../prisma'
 import { Socket } from 'socket.io'
 import { ClientToServerEvents, NoticeData, UserJoinResult, ServerToClientEvents } from '../types/shared/SocketTypes'
+import { getUsersInRoom } from '../services/user_service'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
@@ -70,25 +71,23 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 			create: {
 				id: socket.id,
 				name: username,
-			  	roomId
+			  	roomId,
 			},
 			update: {
 				name: username,
-				roomId: roomId,
+				roomId,
 			}
 		})
 
 		// Retrieve a list of Users for the room
-		const usersInRoom = await prisma.user.findMany({
-			where: {
-				roomId
-			}
-		})
-
-		debug("List of users in room %s: %O", roomId, usersInRoom)
+		const usersInRoom = await getUsersInRoom(roomId)
+		// debug("List of users in room %s: %O", roomId, usersInRoom)
 
 		// Let everyone know a new user has joined
 		socket.broadcast.to(roomId).emit('userJoined', notice)
+
+		// Broadcast an updated userlist to everyone (else) in the room
+		socket.broadcast.to(roomId).emit('onlineUsers', usersInRoom)
 
 		// Let user know they're welcome
 		callback({
@@ -124,8 +123,8 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 			}
 		})
 
-		// Broadcast a new list
-
-
+		// Broadcast new list (without the disconnected user) of online users to the room
+		const users = await getUsersInRoom(user.roomId)
+		socket.broadcast.emit('onlineUsers', users)
 	})
 }
