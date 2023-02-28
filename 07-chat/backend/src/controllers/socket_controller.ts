@@ -60,12 +60,21 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		// Add user to room `roomId`
 		socket.join(roomId)
 
-		// Create a User in the database and set roomId
-		const user = await prisma.user.create({
-			data: {
+		// Create a User in the database and set roomId, if they do not already exist,
+		// otherwise update the User with the roomId
+		// upsert = update or insert
+		const user = await prisma.user.upsert({
+			where: {
+				id: socket.id,
+			},
+			create: {
 				id: socket.id,
 				name: username,
 			  	roomId
+			},
+			update: {
+				name: username,
+				roomId: roomId,
 			}
 		})
 
