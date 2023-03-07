@@ -7,6 +7,7 @@ import { Socket } from 'socket.io'
 import { ClientToServerEvents, NoticeData, UserJoinResult, ServerToClientEvents } from '../types/shared/SocketTypes'
 import { getUsersInRoom } from '../services/user_service'
 import { getRoom, getRooms } from '../services/room_service'
+import { createMessage } from '../services/message_service'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
@@ -31,9 +32,15 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	})
 
 	// Listen for incoming chat messages
-	socket.on('sendChatMessage', (message) => {
+	socket.on('sendChatMessage', async (message) => {
 		debug('New chat message', socket.id, message)
+
+		// Send message to everyone in the room
 		socket.broadcast.to(message.roomId).emit('chatMessage', message)
+
+		// Save message to db `createMessage(message)`
+		await createMessage(message)
+
 	})
 
 	// Listen for a user join request
