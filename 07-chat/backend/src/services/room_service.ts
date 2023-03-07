@@ -20,6 +20,9 @@ export const getRoom = (roomId: string) => {
 	return prisma.room.findUnique({
 		where: {
 			id: roomId,
+		},
+		include: {
+			messages: true,
 		}
 	})
 }

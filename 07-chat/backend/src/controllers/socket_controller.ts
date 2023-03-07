@@ -40,7 +40,6 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
 		// Save message to db `createMessage(message)`
 		await createMessage(message)
-
 	})
 
 	// Listen for a user join request
@@ -99,6 +98,7 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 			data: {
 				id: room.id,
 				name: room.name,
+				messages: room.messages,
 				users: usersInRoom,	// Send the user the list of users in the room
 			}
 		})
