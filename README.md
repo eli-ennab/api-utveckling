@@ -12,6 +12,10 @@
 * Dokumentdatabaser 
 * WebSockets (realtidskommunikation mellan klient och server)
 
+"Kursens syfte är att behandla grundläggande tekniker inom webbutveckling för att skapa webbplatser där information kan lagras, hanteras, analyseras och presenteras.
+
+Målet med kursen är att den studerande ska få en helhetsförståelse för användarflöden i webbapplikationer, kunna hantera och lagra information om användare samt förmåga att i yrkesrollen som Front end developer ta fram fungerande, databasdrivna webbapplikationer. Efter kursen ska den studerande kunna genomföra backendutveckling." https://medieinstitutet.se/utbildningar/front-end-developer/
+
 #### npm install:
 
 ```zsh
